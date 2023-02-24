@@ -17,25 +17,33 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject ball;
     [SerializeField] private GameObject hole;
     [SerializeField] private List<GameObject> lstLevels;
-    [SerializeField] private BotController botCon;
+    [SerializeField] private BotController bonCon;
 
-    //private void SwitchTurn()
-    //{
-
-    //}
 
     private void nextLevel()
     {
-        if (RedTurn)
-        {
-            lstLevels[recentLevel].SetActive(false);
-            newLevel = Random.Range(0, 6);
-            lstLevels[newLevel].SetActive(true);
-            recentLevel = newLevel;
-        }
+        lstLevels[recentLevel].SetActive(false);
+        newLevel = Random.Range(0, 6);
+        lstLevels[newLevel].SetActive(true);
+        recentLevel = newLevel;
     }
 
-    IEnumerator SwitchTurn()
+   
+    public void checkTurn()
+    {
+        if (RedTurn)
+        {
+            nextLevel();
+            ballCon.StartRedTurn();
+        }
+        else
+        {
+            ballCon.StartBlueTurn();
+        }
+
+    }
+
+    public void TurnEnd()
     {
         holeTrans.position = ballPos;
         ballPos *= -1;
@@ -43,29 +51,7 @@ public class GameController : MonoBehaviour
         bool flag = RedTurn;
         RedTurn = BlueTurn;
         BlueTurn = flag;
-        yield return null;
-    }
-
-    IEnumerator checkTurn()
-    {
-        while (true)
-        {
-            yield return null;
-            if (RedTurn)
-            {
-                ballCon.StartRedTurn();
-            }
-            else
-            {
-                ballCon.StartBlueTurn();
-            }
-        }
-    }
-
-    public void TurnEnd()
-    {
-        StartCoroutine(SwitchTurn());
-        
+        checkTurn();
     }
 
 
@@ -84,7 +70,6 @@ public class GameController : MonoBehaviour
         lstLevels[0].SetActive(true);
         recentLevel = 0;
         ballCon.onTurnEnd = TurnEnd;
-        StartCoroutine(checkTurn());
+        ballCon.StartRedTurn();
     }
-
 }

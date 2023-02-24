@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 623018842}
   - component: {fileID: 8120563586773274568}
   - component: {fileID: 8120563586773274583}
-  - component: {fileID: 8141869754734277640}
+  - component: {fileID: 8458390254350400789}
   m_Layer: 0
   m_Name: ball
   m_TagString: Player
@@ -275,9 +275,7 @@ MonoBehaviour:
   hole: {fileID: 0}
   ballAnim: {fileID: 0}
   holeAnim: {fileID: 0}
-  GameConl: {fileID: 0}
-  predictObj: {fileID: 0}
-  predict: {fileID: 0}
+  botCon: {fileID: 0}
 --- !u!114 &8120563586773274583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15da28c2304da4ee7b4788fb6d8d3839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8141869754734277640
+--- !u!114 &8458390254350400789
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -302,3 +300,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408fdfb2b54434b95a2730c7aaa524a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  botAnim: {fileID: 0}
+  lineRenderer: {fileID: 0}

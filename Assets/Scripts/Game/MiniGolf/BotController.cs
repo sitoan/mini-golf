@@ -1,75 +1,73 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using MB.PhysicsPrediction;
+
+
 using UnityEngine;
+using DG.Tweening;
+using System.Collections;
 
 public class BotController : MonoBehaviour
 {
-    BallController ballCon;
-    [SerializeField] private GameController gameCon;
+
+    [SerializeField] private BallController ballCon;
     [SerializeField] private Animator botAnim;
-    PredictionTimeline timeLine;
-    [SerializeField] private GameObject predictLine;
- 
-
-    [SerializeField]
-    PredictionProperty prediction = default;
-    [Serializable]
-    public class PredictionProperty
-    {
-        [SerializeField]
-        public int iterations = 40;
-        public int Iterations => iterations;
-
-        [SerializeField]
-        LineRenderer line = default;
-        public LineRenderer Line => line;
-    }
-
-
-    private void botLaunch(GameObject gameObject)
-    {
-        PredictionSystem.Record.Prefabs.Remove(timeLine);
-    }
+    [SerializeField] private GameObject obj;
+    public Vector2 direction;
+    [SerializeField] private Transform ball;
+    [SerializeField] private predictObject objCon;
+    [SerializeField] private float speed;
+    [SerializeField] private Rigidbody2D rb;
+    private float recentDirection;
+    [SerializeField] private int rotateTime;
 
     public void StartTurn()
     {
-        StartCoroutine(produce());
+        obj.SetActive(true);
+        StartCoroutine(predict());
     }
 
-
-    IEnumerator produce()
+    IEnumerator predict()
     {
-        prediction.Line.enabled = true;
-        while (true)
+        while (!objCon.InHole)
         {
-            yield return new WaitForSeconds(1.0f);
-            predict();
+            rb.isKinematic = true;
+            ballRotate();
+            objCon.resetObj();       
+            direction = obj.transform.position - ball.position;
+            launch(obj);
+            yield return new WaitForSeconds(3.0f);
+        }
+        if (objCon.InHole)
+        {
+            rb.isKinematic = false;
+            obj.SetActive(false);
+            launch(gameObject);
+            ballCon.isMoving = true;
+            ballCon.sittingTime = 0f;
+            objCon.InHole = false;
+            ball.rotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
         }
     }
 
-    void predict()
-    {
-        PredictionSystem.Simulate(20);
-        TrajectoryPredictionDrawer.ShowAll();
-        botAnim.SetBool("bot", true);
-        timeLine = PredictionSystem.Record.Prefabs.Add(gameObject, botLaunch);
-        prediction.Line.positionCount = timeLine.Count;
-        for (int i = 0; i < timeLine.Count; i++)
+    private void ballRotate()
+    { 
+        ball.Rotate(0.0f, 0.0f, 45.0f);
+        rotateTime+=1;
+        if(rotateTime > 3)
         {
-             prediction.Line.SetPosition(i, timeLine[i].Position);
+            ball.rotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
+            rotateTime = 0;
         }
     }
 
-    // Start is called before the first frame update
+    public void launch(GameObject gameObject)
+    {
+        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        rb.AddForce(direction.normalized * speed);
+    }
+   
+ 
     void Start()
     {
-
+        objCon = obj.GetComponent<predictObject>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 }

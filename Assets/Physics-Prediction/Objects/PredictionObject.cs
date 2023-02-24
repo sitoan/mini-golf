@@ -27,7 +27,6 @@ namespace MB.PhysicsPrediction
     {
         public const int ExectionOrder = -200;
         public bool InhHole;
-
         [SerializeField]
         PredictionPhysicsMode mode = PredictionPhysicsMode.Physics3D;
         public PredictionPhysicsMode Mode => mode;
@@ -95,20 +94,6 @@ namespace MB.PhysicsPrediction
             if (IsOriginal) PredictionSystem.Objects.Add(this, mode);
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if(collision.gameObject.tag == "hole")
-            {
-                InhHole = true;
-                Debug.Log("1");
-            }
-            else
-            {
-                InhHole = false;
-                Debug.Log("2");
-
-            }
-        }
 
         void OnEnable()
         {

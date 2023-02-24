@@ -18,13 +18,14 @@ public class BallController : MonoBehaviour
     public bool isMoving;
     private bool redTurn;
     [SerializeField] private windController wind;
-    [SerializeField] private float sittingTime;
-    [SerializeField] private float power;
+    [SerializeField] public float sittingTime;
+    [SerializeField] public float power;
     [SerializeField] private Transform hole;
     [SerializeField] private Animator ballAnim;
     [SerializeField] private Animator holeAnim;
     [SerializeField] private BotController botCon;
     public Action onTurnEnd;
+    public Vector3 shootDirection;
 
     public void StartRedTurn()
     {
@@ -54,12 +55,13 @@ public class BallController : MonoBehaviour
         {
             powerLine.enabled = false;
             Vector2 ballPos = ballTransform.position;
-            Vector3 shootDirection = (ballPos - powerpos);
+            shootDirection = (ballPos - powerpos);
             rb.AddForce(shootDirection * power);
             isMoving = true;
             sittingTime = 0.0f;
         }
     }
+
 
     private void isStoping()
     {
@@ -94,23 +96,6 @@ public class BallController : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "centerWind")
-        {
-            rb.AddForce(wind.center * wind.windForce);
-        }
-        else if(collision.gameObject.tag == "L2RWind")
-        {
-            rb.AddForce(wind.L2R * wind.windForce);
-        }
-        else if(collision.gameObject.tag == "R2LWind")
-        {
-            rb.AddForce(wind.R2L * wind.windForce);
-        }
-
-    }
-
     private void Update()
     {
         if (isMoving)
@@ -123,7 +108,7 @@ public class BallController : MonoBehaviour
     {
         ballTransform = GetComponent<Transform>();
         powerLine = GetComponent<LineRenderer>();
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>(); 
         isMoving = false;
     }
 }
